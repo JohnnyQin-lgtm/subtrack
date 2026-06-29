@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SubTrack — Subscription Tracker
 
-## Getting Started
+A full-stack subscription tracker that helps people see every recurring subscription in one place, how much they spend monthly and yearly, and what's renewing soon.
 
-First, run the development server:
+**Live demo:** _(add Vercel URL after deploy)_
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+![Dashboard screenshot](./screenshots/dashboard.png)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## The problem it solves
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Most people lose track of recurring subscriptions and get surprised by renewals. SubTrack lets users sign in (email or Google), log every subscription, and instantly see monthly/yearly spend, upcoming renewals, and a breakdown by category — with secure **per-user data isolation** enforced by Postgres Row-Level Security.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Tech stack
 
-## Learn More
+- **Next.js (App Router)** — Server Components for data fetching, Server Actions for mutations
+- **Supabase** — Postgres database + Auth (email/password + Google OAuth)
+- **Row-Level Security** — multi-tenant isolation at the database layer
+- **Tailwind CSS** — UI
+- **Recharts** — spending charts
+- **Vercel** — hosting
 
-To learn more about Next.js, take a look at the following resources:
+## Key engineering decisions
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Designed the data model and wrote **RLS policies** so every query is automatically scoped to the signed-in user — no per-request authorization code needed.
+- Used **Server Actions** (`app/actions.ts`) for all mutations instead of hand-written API routes — less boilerplate, fewer bugs, automatic revalidation.
+- Auth follows the official `@supabase/ssr` cookie pattern with a `middleware.ts` session refresh and a server-side route guard in `app/dashboard/layout.tsx`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Run locally
 
-## Deploy on Vercel
+1. `npm install`
+2. Create a Supabase project, then run `supabase-schema.sql` in the SQL Editor (creates the table + RLS policies).
+3. In Supabase: **Authentication → Providers** enable Email and Google (Google needs OAuth credentials from Google Cloud).
+4. Copy `.env.local.example` to `.env.local` and fill in your Supabase URL and anon key.
+5. `npm run dev` → http://localhost:3000
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Possible extensions
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Real email/push renewal reminders, multi-currency with live FX, team/shared accounts, Stripe billing integration, CSV export.
