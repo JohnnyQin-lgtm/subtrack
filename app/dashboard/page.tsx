@@ -1,4 +1,5 @@
 import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
 import { type Subscription } from "@/lib/types";
 import {
@@ -45,7 +46,7 @@ export default async function DashboardPage() {
       <SpendingCharts byCategory={spendingByCategory(subs)} />
 
       <div>
-        <h2 className="mb-3 text-sm font-medium text-slate-700 dark:text-slate-300">
+        <h2 className="mb-3 text-sm font-medium text-muted-foreground">
           All subscriptions ({subs.length})
         </h2>
         <div className="space-y-3">
@@ -62,18 +63,16 @@ function Header() {
   return (
     <div className="flex items-center justify-between">
       <div>
-        <h1 className="text-2xl font-semibold text-slate-900 dark:text-white">
-          Dashboard
-        </h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
+        <h1 className="text-2xl font-semibold">Dashboard</h1>
+        <p className="text-sm text-muted-foreground">
           Track every recurring subscription in one place
         </p>
       </div>
       <SubscriptionFormDialog
         trigger={
-          <button className="flex items-center gap-1.5 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">
+          <Button>
             <Plus className="h-4 w-4" /> Add
-          </button>
+          </Button>
         }
       />
     </div>

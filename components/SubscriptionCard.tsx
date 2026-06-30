@@ -2,6 +2,9 @@
 
 import { Pencil, Trash2 } from "lucide-react";
 import { format, parseISO } from "date-fns";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { type Subscription } from "@/lib/types";
 import { monthlyAmount, daysUntil, formatMoney } from "@/lib/calculations";
 import { deleteSubscription } from "@/app/actions";
@@ -12,7 +15,7 @@ export default function SubscriptionCard({ sub }: { sub: Subscription }) {
   const soon = days >= 0 && days <= 7;
 
   return (
-    <div className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+    <Card className="flex flex-row items-center gap-4 p-4">
       {/* 分类色块 */}
       <div
         className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-sm font-semibold text-white"
@@ -24,24 +27,22 @@ export default function SubscriptionCard({ sub }: { sub: Subscription }) {
       {/* 主信息 */}
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <p className="truncate font-medium text-slate-900 dark:text-white">{sub.name}</p>
+          <p className="truncate font-medium">{sub.name}</p>
           {soon && (
-            <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-950 dark:text-amber-300">
+            <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100 dark:bg-amber-950 dark:text-amber-300">
               {days === 0 ? "Renews today" : `${days}d`}
-            </span>
+            </Badge>
           )}
         </div>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
+        <p className="text-sm text-muted-foreground">
           {sub.category} · renews {format(parseISO(sub.next_renewal), "MMM d, yyyy")}
         </p>
       </div>
 
       {/* 金额 */}
       <div className="text-right">
-        <p className="font-semibold text-slate-900 dark:text-white">
-          {formatMoney(sub.amount)}
-        </p>
-        <p className="text-xs text-slate-400">
+        <p className="font-semibold">{formatMoney(sub.amount)}</p>
+        <p className="text-xs text-muted-foreground">
           {sub.billing_cycle === "yearly"
             ? `${formatMoney(monthlyAmount(sub))}/mo`
             : "/mo"}
@@ -53,20 +54,22 @@ export default function SubscriptionCard({ sub }: { sub: Subscription }) {
         <SubscriptionFormDialog
           subscription={sub}
           trigger={
-            <button className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800">
+            <Button variant="ghost" size="icon" className="text-muted-foreground">
               <Pencil className="h-4 w-4" />
-            </button>
+            </Button>
           }
         />
-        <button
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-muted-foreground hover:text-red-600"
           onClick={() => {
             if (confirm(`Delete ${sub.name}?`)) deleteSubscription(sub.id);
           }}
-          className="rounded-lg p-2 text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950"
         >
           <Trash2 className="h-4 w-4" />
-        </button>
+        </Button>
       </div>
-    </div>
+    </Card>
   );
 }

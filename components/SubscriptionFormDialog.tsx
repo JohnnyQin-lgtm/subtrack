@@ -1,7 +1,24 @@
 "use client";
 
 import { useState } from "react";
-import { X } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { CATEGORIES, type Subscription } from "@/lib/types";
 import { addSubscription, updateSubscription } from "@/app/actions";
 
@@ -26,121 +43,94 @@ export default function SubscriptionFormDialog({ subscription, trigger }: Props)
   }
 
   return (
-    <>
-      <span onClick={() => setOpen(true)}>{trigger}</span>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>
+            {isEdit ? "Edit subscription" : "Add subscription"}
+          </DialogTitle>
+        </DialogHeader>
 
-      {open && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
-          onClick={() => setOpen(false)}
-        >
-          <div
-            className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl dark:bg-slate-900"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
-                {isEdit ? "Edit subscription" : "Add subscription"}
-              </h2>
-              <button
-                onClick={() => setOpen(false)}
-                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <form action={handleSubmit} className="space-y-4">
-              <Field label="Name">
-                <input
-                  name="name"
-                  required
-                  defaultValue={subscription?.name}
-                  placeholder="Netflix"
-                  className="input"
-                />
-              </Field>
-
-              <div className="grid grid-cols-2 gap-3">
-                <Field label="Amount (USD)">
-                  <input
-                    name="amount"
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    required
-                    defaultValue={subscription?.amount}
-                    placeholder="15.49"
-                    className="input"
-                  />
-                </Field>
-                <Field label="Billing cycle">
-                  <select
-                    name="billing_cycle"
-                    defaultValue={subscription?.billing_cycle ?? "monthly"}
-                    className="input"
-                  >
-                    <option value="monthly">Monthly</option>
-                    <option value="yearly">Yearly</option>
-                  </select>
-                </Field>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <Field label="Next renewal">
-                  <input
-                    name="next_renewal"
-                    type="date"
-                    required
-                    defaultValue={subscription?.next_renewal}
-                    className="input"
-                  />
-                </Field>
-                <Field label="Category">
-                  <select
-                    name="category"
-                    defaultValue={subscription?.category ?? "Other"}
-                    className="input"
-                  >
-                    {CATEGORIES.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
-                      </option>
-                    ))}
-                  </select>
-                </Field>
-              </div>
-
-              <div className="flex gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setOpen(false)}
-                  className="flex-1 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
-                >
-                  {isEdit ? "Save changes" : "Add"}
-                </button>
-              </div>
-            </form>
+        <form action={handleSubmit} className="space-y-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="name">Name</Label>
+            <Input
+              id="name"
+              name="name"
+              required
+              defaultValue={subscription?.name}
+              placeholder="Netflix"
+            />
           </div>
-        </div>
-      )}
-    </>
-  );
-}
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <label className="block">
-      <span className="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">
-        {label}
-      </span>
-      {children}
-    </label>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="amount">Amount (USD)</Label>
+              <Input
+                id="amount"
+                name="amount"
+                type="number"
+                step="0.01"
+                min="0"
+                required
+                defaultValue={subscription?.amount}
+                placeholder="15.49"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="billing_cycle">Billing cycle</Label>
+              <Select
+                name="billing_cycle"
+                defaultValue={subscription?.billing_cycle ?? "monthly"}
+              >
+                <SelectTrigger id="billing_cycle" className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="monthly">Monthly</SelectItem>
+                  <SelectItem value="yearly">Yearly</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="next_renewal">Next renewal</Label>
+              <Input
+                id="next_renewal"
+                name="next_renewal"
+                type="date"
+                required
+                defaultValue={subscription?.next_renewal}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="category">Category</Label>
+              <Select name="category" defaultValue={subscription?.category ?? "Other"}>
+                <SelectTrigger id="category" className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {CATEGORIES.map((c) => (
+                    <SelectItem key={c} value={c}>
+                      {c}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <DialogFooter className="gap-2 sm:gap-2">
+            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button type="submit">{isEdit ? "Save changes" : "Add"}</Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }

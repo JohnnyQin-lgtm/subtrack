@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, BarChart3, Bell, ShieldCheck } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function Home() {
   return (
@@ -9,12 +11,9 @@ export default function Home() {
         <span className="flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-white">
           <span className="text-indigo-600">◆</span> SubTrack
         </span>
-        <Link
-          href="/login"
-          className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
-        >
-          Sign in
-        </Link>
+        <Button asChild>
+          <Link href="/login">Sign in</Link>
+        </Button>
       </nav>
 
       {/* Hero */}
@@ -27,12 +26,11 @@ export default function Home() {
           spend each month, what&apos;s renewing soon, and where your money goes.
         </p>
         <div className="mt-8 flex items-center justify-center gap-3">
-          <Link
-            href="/login"
-            className="flex items-center gap-2 rounded-lg bg-indigo-600 px-6 py-3 text-sm font-medium text-white hover:bg-indigo-700"
-          >
-            Get started free <ArrowRight className="h-4 w-4" />
-          </Link>
+          <Button asChild size="lg">
+            <Link href="/login">
+              Get started free <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
         </div>
       </section>
 
@@ -72,12 +70,14 @@ function Feature({
   desc: string;
 }) {
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
-      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600 dark:bg-indigo-950">
-        {icon}
-      </div>
-      <h3 className="font-semibold text-slate-900 dark:text-white">{title}</h3>
-      <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{desc}</p>
-    </div>
+    <Card className="p-6">
+      <CardContent className="p-0">
+        <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600 dark:bg-indigo-950">
+          {icon}
+        </div>
+        <h3 className="font-semibold text-slate-900 dark:text-white">{title}</h3>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{desc}</p>
+      </CardContent>
+    </Card>
   );
 }
