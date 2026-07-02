@@ -2,7 +2,7 @@
 
 A full-stack subscription tracker that helps people see every recurring subscription in one place, how much they spend monthly and yearly, and what's renewing soon.
 
-**Live demo:** _(add Vercel URL after deploy)_
+**Live demo:** https://subtrack-mocha.vercel.app
 
 ![Dashboard screenshot](./screenshots/dashboard.png)
 
