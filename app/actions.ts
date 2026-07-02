@@ -81,14 +81,38 @@ export async function seedSampleData() {
     { name: "Xbox Game Pass", amount: 16.99, billing_cycle: "monthly", next_renewal: format(addDays(today, 20), "yyyy-MM-dd"), category: "Gaming", color: CATEGORY_COLORS.Gaming },
   ];
 
-  await supabase
+  // 防重复(第一道):已有订阅就直接返回 —— 处理顺序连点的常见情况
+  const { count } = await supabase
     .from("subscriptions")
-    .insert(samples.map((s) => ({ ...s, user_id: user.id })));
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", user.id);
+  if (count && count > 0) return;
+
+  // 防重复(第二道,数据库层根治):is_sample=true 的行受部分唯一索引
+  // (user_id, name) 约束。真正并发的两次插入,第一次成功,第二次触发
+  // 唯一冲突(错误码 23505),这里静默忽略 —— 保证幂等,不弹错。
+  const { error } = await supabase
+    .from("subscriptions")
+    .insert(samples.map((s) => ({ ...s, user_id: user.id, is_sample: true })));
+  if (error && error.code !== "23505") throw error;
+
+  revalidatePath("/dashboard");
+}
+
+/** 清空当前用户的全部订阅(方便重置演示数据) */
+export async function clearAllSubscriptions() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  await supabase.from("subscriptions").delete().eq("user_id", user.id);
   revalidatePath("/dashboard");
 }
 
 export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();
-  redirect("/login");
+  redirect("/");
 }

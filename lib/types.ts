@@ -10,6 +10,7 @@ export interface Subscription {
   next_renewal: string; // ISO date (YYYY-MM-DD)
   category: string;
   color: string;
+  is_sample: boolean;
   created_at: string;
 }
 

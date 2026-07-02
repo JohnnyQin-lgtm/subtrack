@@ -13,6 +13,7 @@ import SpendingCharts from "@/components/SpendingCharts";
 import SubscriptionCard from "@/components/SubscriptionCard";
 import SubscriptionFormDialog from "@/components/SubscriptionFormDialog";
 import EmptyState from "@/components/EmptyState";
+import ClearAllButton from "@/components/ClearAllButton";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -46,9 +47,12 @@ export default async function DashboardPage() {
       <SpendingCharts byCategory={spendingByCategory(subs)} />
 
       <div>
-        <h2 className="mb-3 text-sm font-medium text-muted-foreground">
-          All subscriptions ({subs.length})
-        </h2>
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-sm font-medium text-muted-foreground">
+            All subscriptions ({subs.length})
+          </h2>
+          <ClearAllButton />
+        </div>
         <div className="space-y-3">
           {subs.map((sub) => (
             <SubscriptionCard key={sub.id} sub={sub} />

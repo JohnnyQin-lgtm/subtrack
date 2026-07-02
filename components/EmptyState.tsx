@@ -2,7 +2,7 @@
 
 import { Sparkles } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import SubmitButton from "@/components/SubmitButton";
 import { seedSampleData } from "@/app/actions";
 
 export default function EmptyState() {
@@ -16,7 +16,7 @@ export default function EmptyState() {
         Add your first subscription, or load some sample data to see how it works.
       </p>
       <form action={seedSampleData} className="mt-5">
-        <Button type="submit">Load sample data</Button>
+        <SubmitButton pendingText="Loading...">Load sample data</SubmitButton>
       </form>
     </Card>
   );

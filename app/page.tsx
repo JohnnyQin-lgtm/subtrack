@@ -2,8 +2,17 @@ import Link from "next/link";
 import { ArrowRight, BarChart3, Bell, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { createClient } from "@/lib/supabase/server";
 
-export default function Home() {
+export default async function Home() {
+  // 读取登录态,决定按钮文案(未登录→Sign in / 已登录→Go to dashboard)
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const loggedIn = Boolean(user);
+  const ctaHref = loggedIn ? "/dashboard" : "/login";
+
   return (
     <div className="min-h-screen bg-linear-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
       {/* Nav */}
@@ -12,7 +21,7 @@ export default function Home() {
           <span className="text-indigo-600">◆</span> SubTrack
         </span>
         <Button asChild>
-          <Link href="/login">Sign in</Link>
+          <Link href={ctaHref}>{loggedIn ? "Go to dashboard" : "Sign in"}</Link>
         </Button>
       </nav>
 
@@ -27,8 +36,9 @@ export default function Home() {
         </p>
         <div className="mt-8 flex items-center justify-center gap-3">
           <Button asChild size="lg">
-            <Link href="/login">
-              Get started free <ArrowRight className="h-4 w-4" />
+            <Link href={ctaHref}>
+              {loggedIn ? "Go to dashboard" : "Get started free"}{" "}
+              <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>
         </div>

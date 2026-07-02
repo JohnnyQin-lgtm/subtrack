@@ -10,6 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import SubmitButton from "@/components/SubmitButton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -127,7 +128,9 @@ export default function SubscriptionFormDialog({ subscription, trigger }: Props)
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button type="submit">{isEdit ? "Save changes" : "Add"}</Button>
+            <SubmitButton pendingText="Saving...">
+              {isEdit ? "Save changes" : "Add"}
+            </SubmitButton>
           </DialogFooter>
         </form>
       </DialogContent>
