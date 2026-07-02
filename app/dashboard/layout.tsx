@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -21,9 +22,12 @@ export default async function DashboardLayout({
     <div className="min-h-screen bg-muted/40">
       <header className="border-b bg-background">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-          <span className="flex items-center gap-2 font-bold">
+          <Link
+            href="/"
+            className="flex items-center gap-2 font-bold transition-opacity hover:opacity-80"
+          >
             <span className="text-indigo-600">◆</span> SubTrack
-          </span>
+          </Link>
           <div className="flex items-center gap-3">
             <span className="hidden text-sm text-muted-foreground sm:inline">
               {user.email}
