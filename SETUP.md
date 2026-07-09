@@ -49,13 +49,14 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGci...(你复制的 anon key)
 
 ---
 
-## 第 4 步:开启邮箱登录 + 关掉邮箱确认(方便本地测试)(2 分钟)
+## 第 4 步:开启邮箱登录 + 打开邮箱确认(真实验证流程)(2 分钟)
 
 1. 左侧 → **Authentication** → **Sign In / Providers**(或 **Providers**)
 2. **Email** 默认是开的,确认它是 **Enabled** ✅
-3. （可选,强烈建议本地测试时做)为了不用真收确认邮件就能登录:
-   - 找到 **Email** 设置里的 **Confirm email** 开关 → **关掉**
-   - 这样注册后能立刻登录,方便你测试。上线给客户看时可以再打开。
+3. 找到 **Email** 设置里的 **Confirm email** 开关 → **打开**(ON)
+   - 这样注册后 Supabase 会发一封**真实验证邮件**,用户点链接激活后才能登录 —— 这是"真正的邮箱登录"流程。
+   - 应用还支持 **Magic Link**(免密码):用户在登录页切到 "Email link" tab,输邮箱 → 收一次性登录链接 → 点击进站。
+   - 邮件由 **Supabase 自带发件服务**发出(发件人 `noreply@mail.app.supabase.net`),免费档约 **3-4 封/小时**速率限制 —— demo 完全够用。生产环境如需更稳定投递,可在 Supabase → Auth → SMTP Settings 接入自有域名 + Resend。
 
 ---
 
@@ -124,7 +125,7 @@ npm run dev
 |------|------|
 | 登录后白屏 / `Could not authenticate` | `.env.local` 的 URL 或 key 填错了,或没重启 `npm run dev` |
 | Google 登录报 `redirect_uri_mismatch` | Google Cloud 里的 Authorized redirect URI 和 Supabase Callback URL 不完全一致(注意结尾 `/auth/v1/callback`) |
-| 注册后要收邮件才能登录 | 第 4 步的 Confirm email 没关(本地测试建议关) |
+| 注册后要收邮件才能登录 | 第 4 步的 Confirm email 已打开 —— 这是**预期行为**(真实验证流程)。去邮箱点激活链接即可 |
 | 能登录但加订阅没反应 | 第 2 步 SQL 没跑成功,表或 RLS 策略没建好 —— 重跑一遍 `supabase-schema.sql` |
 | Google 登录后没跳回 | 去 Supabase → Authentication → URL Configuration 把 `http://localhost:3000` 加进 Redirect URLs |
 

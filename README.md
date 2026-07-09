@@ -13,9 +13,9 @@ Most people lose track of recurring subscriptions and get surprised by renewals.
 ## Tech stack
 
 - **Next.js (App Router)** — Server Components for data fetching, Server Actions for mutations
-- **Supabase** — Postgres database + Auth (email/password + Google OAuth)
+- **Supabase** — Postgres database + Auth (email/password with verification, passwordless magic link, and Google OAuth)
 - **Row-Level Security** — multi-tenant isolation at the database layer
-- **Tailwind CSS** — UI
+- **Tailwind CSS** + **shadcn/ui** — UI
 - **Recharts** — spending charts
 - **Vercel** — hosting
 
@@ -35,4 +35,4 @@ Most people lose track of recurring subscriptions and get surprised by renewals.
 
 ## Possible extensions
 
-Real email/push renewal reminders, multi-currency with live FX, team/shared accounts, Stripe billing integration, CSV export.
+Real email/push renewal reminders, multi-currency with live FX, team/shared accounts, Stripe billing integration, CSV export, and custom SMTP (e.g. Resend with an owned domain) for production-grade email deliverability.
